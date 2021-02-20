@@ -16,6 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from trainee_task.views import magiclink_view
+
 urlpatterns = [
+	path('', magiclink_view, name='passless'),
     path('admin/', admin.site.urls),
 ]
