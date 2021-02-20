@@ -9,13 +9,13 @@ import random as rd
 '''
 def magiclink_view(request): # increment the value of counter by 1 and show the email/total
 	obj = User.objects.get(user_id=1)
-	counter_incremented = increment(obj.counter)
+	obj.counter = increment(obj.counter)
 	context = {
 		'email': obj.email, 
-		'counter': counter_incremented 
+		'counter': obj.counter 
 	}
 
-	# counter_incremented.save()
+	obj.save()
 	
 	return render(request, "passless.html", context)
 
