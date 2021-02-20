@@ -19,6 +19,6 @@ from django.urls import path
 from trainee_task.views import magiclink_view
 
 urlpatterns = [
-	path('', magiclink_view, name='passless'),
+	path('', magiclink_view),
     path('admin/', admin.site.urls),
 ]

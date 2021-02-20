@@ -1,17 +1,23 @@
-from django.http import HttpResponse
 from django.shortcuts import render
 
 from .models import User
-import templates
-
 import random as rd
 
 
 '''
  Views
 '''
-def magiclink_view(request, *args, **kwargs):
-    return render(request, "passless.html", {})
+def magiclink_view(request): # increment the value of counter by 1 and show the email/total
+	obj = User.objects.get(user_id=1)
+	counter_incremented = increment(obj.counter)
+	context = {
+		'email': obj.email, 
+		'counter': counter_incremented 
+	}
+
+	# counter_incremented.save()
+	
+	return render(request, "passless.html", context)
 
 
 ''' 

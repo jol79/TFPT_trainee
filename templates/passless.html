@@ -2,12 +2,23 @@
 <html>
 <head>
 	<title>Passless page</title>
-	<link rel="stylesheet" style="text/css" href="../passless_styles.css">
+	<style>
+		body {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+
+			font-family: Comic Sans MS;
+			background-color: #FAAD41;
+		}
+		h1 {
+			margin-right: 10px;
+		}
+	</style>
 </head>
 <body>
-	<h1>This is passless page</h1>
-	<p>
-	    Current user: {{ request.user }}
-	</p>
+	<h1> {{ email }} </h1>
+	<p> Visits quantity = {{ counter }} </p>
 </body>
 </html>
