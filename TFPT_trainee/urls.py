@@ -16,9 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from trainee_task.views import magiclink_view
+from trainee_task.views import magiclink_view, register_view
 
 urlpatterns = [
 	path('', magiclink_view),
+	path('register/', register_view),
     path('admin/', admin.site.urls),
 ]
