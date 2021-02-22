@@ -26,15 +26,20 @@ def magiclink_view(request): # increment the value of counter by 1 and show the 
 	return render(request, "passless.html", context)
 
 
-def register_view(request): 
-	form = RegisterForm(request.POST or None)
-	# form.token.value = generate_token()
+def register_view(request):
+	form = RegisterForm() # initialize the form
 
-	if form.is_valid():
-		form.save()
+	if request.method == "POST": 
+		gen_token = generate_token()
+		form = RegisterForm(request.POST)
+		if form.is_valid(): 
+			User.objects.get_or_create(email=form.data['email'], token=gen_token)
+		else:
+			form.cleaned_data()
 
 	context = {
-		'form': form
+		"form": form,
+		"token": gen_token
 	}
 
 	return render(request, "register.html", context)
