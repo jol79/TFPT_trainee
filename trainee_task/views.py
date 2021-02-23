@@ -32,10 +32,16 @@ def register_view(request):
 	if request.method == "POST": 
 		gen_token = generate_token()
 		form = RegisterForm(request.POST)
-		if form.is_valid(): 
-			User.objects.get_or_create(email=form.data['email'], token=gen_token)
-		else:
-			form.cleaned_data()
+
+		if User.objects.get(email=form.data['email']) is None:
+			if form.is_valid():
+				obj, created = User.objects.get_or_create(email=form.data['email'], token=gen_token)
+				form = RegisterForm(request.POST)
+		elif User.objects.get(email=form.data['email']) != None:
+			# raise forms.ValidationError("This email already exists")
+			print("Email already exists")
+			form = RegisterForm(request.POST)
+			
 
 	context = {
 		"form": form,
