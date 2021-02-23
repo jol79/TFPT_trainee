@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import	HttpResponse
+from django.core.mail import send_mail
 
 from .models import User
 from .forms import RegisterForm
@@ -27,25 +28,34 @@ def magiclink_view(request): # increment the value of counter by 1 and show the 
 
 
 def register_view(request):
-	form = RegisterForm() # initialize the form
+	gen_token = generate_token()
+	initial_data = {
+		'token': gen_token,
+	}
 
 	if request.method == "POST": 
-		gen_token = generate_token()
-		form = RegisterForm(request.POST)
+		form = RegisterForm(request.POST, initial=initial_data)
 
-		if User.objects.get(email=form.data['email']) is None:
-			if form.is_valid():
-				obj, created = User.objects.get_or_create(email=form.data['email'], token=gen_token)
-				form = RegisterForm(request.POST)
-		elif User.objects.get(email=form.data['email']) != None:
-			# raise forms.ValidationError("This email already exists")
-			print("Email already exists")
-			form = RegisterForm(request.POST)
+		if form.is_valid():
+			obj = User()
+			obj.email = form.cleaned_data['email']
+			obj.token = gen_token
+			send_mail(
+				'MagicLink to login to your account', # subject
+				'Hello, here is a passwordless link: http://127.0.0.1:8000/?email={}&token={}'.format(form.cleaned_data['email'], gen_token), # message
+				'tftptrainee@gmail.com', # from
+				[form.cleaned_data['email']], # to
+				)
+
+			obj.save()
+			form = RegisterForm()
+
+		else:
+			form = RegisterForm()
 			
 
 	context = {
 		"form": form,
-		"token": gen_token
 	}
 
 	return render(request, "register.html", context)
